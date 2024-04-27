@@ -1,21 +1,14 @@
 import html from "../function/core.js";
-function mainItem() {
+function mainItem({todo}) {
+  /* ${todo.completed ? 'class="completed"' : ""  can be used ass class="${todo.completed && 'completed'}"*/
   return html`
-    <li class="completed">
+    <li class='${todo.completed && 'completed'}' >
       <div class="view">
-        <input class="toggle" type="checkbox" checked />
-        <label>Taste JavaScript</label>
+        <input class="toggle" type="checkbox" ${todo.completed && 'checked'} />
+        <label>${todo.title}</label>
         <button class="destroy"></button>
       </div>
       <input class="edit" value="Create a TodoMVC template" />
-    </li>
-    <li>
-      <div class="view">
-        <input class="toggle" type="checkbox" />
-        <label>Buy a unicorn</label>
-        <button class="destroy"></button>
-      </div>
-      <input class="edit" value="Rule the web" />
     </li>
   `;
 }
