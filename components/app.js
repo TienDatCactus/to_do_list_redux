@@ -1,0 +1,1 @@
+import hmtl from '../function/core.js'
