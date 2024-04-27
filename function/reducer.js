@@ -1,4 +1,3 @@
-import { define } from "core-js/core/object";
 
 const init = {};
 
