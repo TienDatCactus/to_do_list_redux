@@ -1,19 +1,60 @@
+import storage from "./local-storage.js";
+
 const init = {
-  todos: [
-    {
-      title: "Nigga",
-      completed: false,
-    },
-    {
-      title: "Chigga",
-      completed: true,
-    },
-  ],
+  todos: storage.get(),
+  filter: "all",
+  filters: {
+    all: () => true,
+    active: (todo) => !todo.completed,
+    completed: (todo) => todo.completed,
+  },
+  editIndex: null,
 };
 
 const actions = {
   ADD({ todos }, title) {
-    todos.push({ title, completed: false });
+    if (title) {
+      todos.push({ title, completed: false });
+      storage.set(todos);
+    }
+  },
+  TOGGLE({ todos }, index) {
+    const todo = todos[index];
+    todo.completed = !todo.completed;
+    storage.set(todos);
+  },
+  TOGGLE_ALL({ todos }, completed) {
+    todos.forEach((todo) => (todo.completed = completed));
+    storage.set(todos);
+  },
+  DESTROY({ todos }, index) {
+    todos.splice(index, 1);
+    storage.set(todos);
+  },
+  SWITCH(state, filter) {
+    state.filter = filter;
+  },
+  CLEAR_COMPLETE(state) {
+    state.todos = state.todos.filter(state.filters.active);
+    storage.set(state.todos);
+  },
+  EDIT(state, index) {
+    state.editIndex = index;
+  },
+  END_EDIT(state, title) {
+    if (state.editIndex != null) {
+      if (title) {
+        state.todos[state.editIndex].title = title;
+        storage.set(state.todos);
+      } else {
+        this.DESTROY(state,state.index);
+        storage.set(state.todos);
+      }
+      state.editIndex = null;
+    }
+  },
+  CANCEL_EDIT(state) {
+    state.editIndex = null;
   },
 };
 
